@@ -2,7 +2,8 @@ import re
 
 # Define token types
 TOKEN_TYPES = [
-    ("NUMBER", r"\d+"),
+    ("DECIMAL", r"\d+\.\d+"),
+    ("INTEGER", r"\d+"),
     ("PLUS", r"plus"),
     ("MINUS", r"minus"),
     ("MULTIPLY", r"times"),
@@ -10,12 +11,23 @@ TOKEN_TYPES = [
     ("LPAREN", r"\("),
     ("RPAREN", r"\)"),
     ("WHITESPACE", r"\s+"),
+    ("BOOLEAN", r"true|false"),
 ]
 
 class Token:
     def __init__(self, token_type, value):
         self.token_type = token_type
-        self.value = value
+        self.value = self.get_value(value)
+
+    def get_value(self, value):
+        if self.token_type == "INTEGER":
+            return int(value)
+        elif self.token_type == "DECIMAL":
+            return float(value)
+        elif self.token_type == "BOOLEAN":
+            return value == "true"
+        else:
+            return value
 
     def __repr__(self):
         return f"Token({self.token_type}, {self.value})"
@@ -38,6 +50,6 @@ def lex(input_string):
     return tokens
 
 # Test the lexer
-input_string = "12 plus 34 times (56 minus 78 divide 90)"
+input_string = "12.1 plus 34 times (56.0 minus 78.97 divide 90)"
 tokens = lex(input_string)
 print(tokens)
