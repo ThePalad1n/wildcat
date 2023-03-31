@@ -1,5 +1,14 @@
 import re
 
+categorized ={
+'literals': [r'\d+|\'.*?\'|\".*?\"'],
+'operators': [r'\plus|\minus|\times|\divide'],
+'variables': [r'[a-zA-Z_][a-zA-Z0-9_]*'],
+'reserved_words': ['when', 'orwhen', 'otherwise', 'loop', 'repeat', 'end'],
+'data_types': ['INTEGER', 'DECIMAL', 'BOOLEAN'],
+'logical_operators': [r'\and|\or|\not']
+}
+
 # Define token types
 TOKEN_TYPES = [
     ("DECIMAL", r"\d+\.\d+"),
@@ -49,7 +58,10 @@ def lex(input_string):
 
     return tokens
 
+
+with open('source_code.txt', 'r') as file:
+    code = file.read()
 # Test the lexer
-input_string = "12.1 plus 34 times (56.0 minus 78.97 divide 90)"
+input_string = code
 tokens = lex(input_string)
 print(tokens)
