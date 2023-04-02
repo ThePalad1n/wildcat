@@ -6,7 +6,8 @@ categorized ={
 'variables': [r'[a-zA-Z_][a-zA-Z0-9_]*'],
 'reserved_words': ['when', 'orwhen', 'otherwise', 'loop', 'repeat', 'end'],
 'data_types': ['INTEGER', 'DECIMAL', 'BOOLEAN'],
-'logical_operators': [r'\and|\or|\not']
+'logical_operators': [r'\and|\or|\not'],
+'comparative_operators': [r'\is|\is\snot|\greater\sthan|\less\sthan|\greater\sthan\sor\sis|\less\sthan\sor\sis']
 }
 
 # Define token types
@@ -21,6 +22,12 @@ TOKEN_TYPES = [
     ("RPAREN", r"\)"),
     ("WHITESPACE", r"\s+"),
     ("BOOLEAN", r"true|false"),
+    ("IS", r"is"),
+    ("ISNOT", r"is\snot"),
+    ("GREATERTHAN", r"greater\sthan"),
+    ("LESSTHAN", r"less\sthan"),
+    ("GREATERTHANORIS", r"greater\sthan\sor\sis"),
+    ("LESSTHANORIS", r"less\sthan\sor\sis"),
 ]
 
 class Token:
