@@ -10,12 +10,6 @@ class BST:
         self.height = 0
         self.size = 0
         
-    def __init__(self, arr):
-        self.root = None
-        self.height = 0
-        self.size = 0
-        for i in arr:
-            self.insert(i)
 
     def insert(self, data):
         if self.root is None:
@@ -105,3 +99,31 @@ class BST:
             return 0
         else:
             return 1 + max(self.get_height(node.left), self.get_height(node.right))
+        
+bst = BST()
+bst.insert(50)
+bst.insert(30)
+bst.insert(70)
+bst.insert(20)
+bst.insert(40)
+bst.insert(60)
+bst.insert(80)
+
+# print the tree using various traversal methods
+print("Preorder traversal:")
+bst.preorder_iterate(bst.root)
+print("\nInorder traversal:")
+bst.inorder_iterate(bst.root)
+print("\nPostorder traversal:")
+bst.postorder_iterate(bst.root)
+print("\nValue order traversal:")
+bst.value_order_iterate(bst.root)
+
+# search for a node
+print("\nSearch for 60:", bst.search(60))
+print("Search for 10:", bst.search(10))
+
+# delete a node and print the tree again
+bst.delete(50)
+print("After deleting 50:")
+bst.inorder_iterate(bst.root)
