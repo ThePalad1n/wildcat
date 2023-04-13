@@ -1,5 +1,79 @@
 import re
 
+class Node:
+    def __init__(self, value):
+        self.value = value
+        self.left = None
+        self.right = None
+
+class BSTParser:
+    def __init__(self, tokens):
+        self.tokens = tokens
+        self.index = 0
+
+    def parse(self):
+        root = self._parse_expression()
+        if self.index < len(self.tokens):
+            raise ValueError(f"Unexpected token {self.tokens[self.index]} at position {self.index}")
+        return root
+
+    def _parse_expression(self):
+        left = self._parse_term()
+        while self.index < len(self.tokens) and self.tokens[self.index].token_type in ["PLUS", "MINUS"]:
+            op = self.tokens[self.index]
+            self.index += 1
+            right = self._parse_term()
+            node = Node(op)
+            node.left = left
+            node.right = right
+            left = node
+        return left
+
+    def _parse_term(self):
+        left = self._parse_factor()
+        while self.index < len(self.tokens) and self.tokens[self.index].token_type in ["MULTIPLY", "DIVIDE"]:
+            op = self.tokens[self.index]
+            self.index += 1
+            right = self._parse_factor()
+            node = Node(op)
+            node.left = left
+            node.right = right
+            left = node
+        return left
+
+    def _parse_factor(self):
+        if self.index >= len(self.tokens):
+            raise ValueError(f"Unexpected end of expression")
+        token = self.tokens[self.index]
+        self.index += 1
+        if token.token_type in ["INTEGER", "DECIMAL"]:
+            return Node(token)
+        elif token.token_type == "LPAREN":
+            node = self._parse_expression()
+            if self.tokens[self.index].token_type != "RPAREN":
+                raise ValueError(f"Expected ) but got {self.tokens[self.index]} at position {self.index}")
+            self.index += 1
+            return node
+        else:
+            raise ValueError(f"Unexpected token {token} at position {self.index}")
+
+def evaluate(node):
+    if node.left is None and node.right is None:
+        return node.value.get_value(node.value.value)
+    else:
+        left = evaluate(node.left)
+        right = evaluate(node.right)
+        if node.value.token_type == "PLUS":
+            return left + right
+        elif node.value.token_type == "MINUS":
+            return left - right
+        elif node.value.token_type == "MULTIPLY":
+            return left * right
+        elif node.value.token_type == "DIVIDE":
+            return left / right
+        else:
+            raise ValueError(f"Unknown operator {node.value.token_type}")
+
 categorized ={
 'literals': [r'\d+|\'.*?\'|\".*?\"'],
 'operators': [r'\plus|\minus|\times|\divide'],
@@ -66,9 +140,16 @@ def lex(input_string):
     return tokens
 
 
+
+
+
 with open('source_code.txt', 'r') as file:
     code = file.read()
 # Test the lexer
 input_string = code
 tokens = lex(input_string)
 print(tokens)
+parser = BSTParser(tokens)
+root = parser.parse()
+result = evaluate(root)
+print(result)
